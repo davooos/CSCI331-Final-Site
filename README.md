@@ -1,1 +1,1 @@
-# CSCI331-Final-Site
+# CSCI331 Final Site
