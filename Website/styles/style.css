@@ -1,0 +1,22 @@
+html{
+    background-color: RGB(140, 125, 125);
+}
+
+.header {
+  /* menu style inline flex */
+  display: flex;
+  background-color:white;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 10px;
+}
+.menu {
+  /* menu style inline flex */
+  display: inline-flex;
+  gap: 20px;
+}
+
+img.logo{
+    height: 75px;
+    width: auto;
+}
