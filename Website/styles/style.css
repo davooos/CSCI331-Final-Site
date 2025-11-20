@@ -3,7 +3,7 @@ html{
   background-color: RGB(0,91,150);
 }
 h2{
-  color: antiquewhite;
+  color: white;
   text-align: center;
 }
 .header {
@@ -79,4 +79,10 @@ td, th {
 }
 tr:nth-child(even) {
     background-color: #eee;
+}
+
+.faq-list{
+    background-color: white;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
