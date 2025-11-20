@@ -1,5 +1,5 @@
 html{
-  
+  font-family: arial, sans-serif;
   background-color: RGB(0,91,150);
 }
 h2{
@@ -49,9 +49,34 @@ h2{
   flex-wrap: wrap;
   grid-template-columns: auto auto auto;
   flex-shrink: 1;
+  border-style: inset;
+
 }
 .main_card img{
   height: 100%;
   width: 100%;
   object-fit: cover;
+}
+
+img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.catalogue{
+  padding: 10px;
+}
+table {
+  
+  background-color: white;
+    border-collapse: collapse;
+    width: 100%;
+}
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+tr:nth-child(even) {
+    background-color: #eee;
 }
