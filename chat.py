@@ -13,7 +13,7 @@ def load_hot_tubs_data():
 class Chat:
     def __init__(self):
         self.client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-        self.hot_tubs_data = load_hot_tubs_data() # Load hot tub catalog
+        catalog_str = json.dumps(load_hot_tubs_data())
 
         self.messages = [
             {
@@ -30,6 +30,14 @@ class Chat:
                 ),
             },
             {
+                "role": "system",
+                "content": (
+                    "Here is the current hot tub catalog in JSON. "
+                    "Use this data to answer questions and recommend specific models:\n"
+                    f"{catalog_str}"
+                ),
+            },
+            {
                 "role": "assistant",
                 "content": "Hello! What is your name?",
             },
@@ -37,19 +45,10 @@ class Chat:
 
     def send_message(self, input_text: str):
         # Add the catalog as an extra system message each call
-        catalog_str = json.dumps(self.hot_tubs_data)
 
         completion = self.client.chat.completions.create(
             model="meta-llama/llama-4-scout-17b-16e-instruct",
             messages=self.messages + [
-                {
-                    "role": "system",
-                    "content": (
-                        "Here is the current hot tub catalog in JSON. "
-                        "Use this data to answer questions and recommend specific models:\n"
-                        f"{catalog_str}"
-                    ),
-                },
                 {
                     "role": "user",
                     "content": input_text,
