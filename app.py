@@ -103,11 +103,6 @@ def faq():
     return render_template('faq.html')
 
 
-@app.route('/contact', methods=['GET']) # Contact route
-def contact():
-    return render_template('contact.html')
-
-
 cleanup_thread = Thread(target=cleanup, daemon=True) # Start the cleanup thread
 cleanup_thread.start()
 
