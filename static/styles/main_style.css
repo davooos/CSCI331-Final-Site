@@ -67,7 +67,6 @@ h2 {
 }
 
 table {
-
     background-color: white;
     border-collapse: collapse;
     width: 100%;
@@ -76,7 +75,7 @@ table {
 td, th {
     border: 1px solid #dddddd;
     text-align: left;
-    padding: 8px;
+    padding: 10px;
 }
 
 tr:nth-child(even) {
