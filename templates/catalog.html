@@ -15,8 +15,8 @@
             </tr>
             {% for tub in tubs %}
             <tr>
-                <td></td>
-                <td>{{ tub.name }}</td>
+                <td><img src="{{ tub.image }}" alt="{{ tub.name }}" style="width:100px; height:auto;"></td>
+                <td><a href="/chatbot">{{ tub.name }}</a></td>
                 <td>{{ tub.capacity }}</td>
                 <td>${{ tub.price }}</td>
                 <td>

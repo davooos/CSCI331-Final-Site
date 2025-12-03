@@ -6,7 +6,7 @@
             "capacity": 6,
             "features": ["LED Lighting", "Massage Jets", "Bluetooth Speakers"],
             "price": "10000.00",
-            "image": "luxury_spa_tub.jpg"
+            "image": "/static/images/1.jpg"
         },
         {
             "id": 2,
@@ -14,7 +14,7 @@
             "capacity": 3,
             "features": ["Heated Seats", "Aromatherapy", "Waterfall"],
             "price": "7500.00",
-            "image": "compact_hot_tub.jpg"
+            "image": "/static/images/2.jpg"
         },
         {
             "id": 3,
@@ -22,7 +22,7 @@
             "capacity": 8,
             "features": ["Ice Bucket", "Cup Holders", "LED Lighting"],
             "price": "8000.00",
-            "image": "family_hot_tub.jpg"
+            "image": "/static/images/3.jpg"
         },
         {
             "id": 4,
@@ -30,7 +30,7 @@
             "capacity": 6,
             "features": ["Solar Heating", "Built-in Sound System", "LED Lighting"],
             "price": "9000.00",
-            "image": "outdoor_hot_tub.jpg"
+            "image": "/static/images/4.jpg"
         },
         {
             "id": 5,
@@ -38,7 +38,7 @@
             "capacity": 4,
             "features": ["Massage Jets", "Bluetooth Speakers", "Cup Holders"],
             "price": "15000.00",
-            "image": "deluxe_hot_tub.jpg"
+            "image": "/static/images/5.jpg"
         },
         {
             "id": 6,
@@ -46,7 +46,7 @@
             "capacity": 5,
             "features": ["Energy Efficient Pump", "LED Lighting", "Natural Filtration System"],
             "price": "8500.00",
-            "image": "eco_friendly_hot_tub.jpg"
+            "image": "/static/images/6.jpeg"
         }
     ]
 }
