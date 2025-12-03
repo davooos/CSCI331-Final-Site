@@ -8,23 +8,18 @@ import os
 from threading import Lock, Thread
 import json
 import redis
+import uuid
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY')
 users = {}
 users_lock = Lock()
 
-app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY')
-app.config['SESSION_TYPE'] = 'redis'
-app.config['SESSION_PERMANENT'] = True
-app.config['SESSION_USE_SIGNER'] = True
-app.config['SESSION_KEY_PREFIX'] = 'csci331:'
-app.config['SESSION_REDIS'] = redis.from_url(
+redis_client = redis.StrictRedis.from_url(
     os.environ.get('REDIS_URL'),
-    ssl_cert_reqs=None  # Disables SSL certificate verification
+    decode_responses=True,
+    ssl_cert_reqs=None  # Disable SSL certificate verification
 )
-
-Session(app)
 
 def cleanup(): # Background thread to clean up inactive sessions
     while True:
@@ -44,61 +39,52 @@ def cleanup(): # Background thread to clean up inactive sessions
         time.sleep(300) # Check every 5 minutes
 
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+@app.route('/chatbot', methods=['GET'])
+def chatbot():
+    session_id = session.get('session_id')
+    if not session_id or not redis_client.exists(session_id):
+        # Create a new session
+        session_id = str(uuid.uuid4())
+        session['session_id'] = session_id
+        redis_client.hset(session_id, mapping={"messages": "[]", "last_active": str(datetime.now())})
+        print("New session created:", session_id)
+    else:
+        # Update last active time
+        redis_client.hset(session_id, "last_active", str(datetime.now()))
+    messages = eval(redis_client.hget(session_id, "messages"))
+    return render_template('chatbot.html', messages=messages)
 
 
 @app.route('/send-chat', methods=['POST'])
 def send_chat():
-    with users_lock:
-        user = users.get(session.get('session_id', None), None)
-    if user:
-        chatbot = user.get_chatbot()
+    session_id = session.get('session_id')
+    if session_id and redis_client.exists(session_id):
         data = request.form['userInput']
-        user.messages.append(Message("You", data))
-        message = []
-        for chunk in chatbot.send_message(data):
-            message.append(chunk.choices[0].delta.content or "")
-            chatbot.messages.append({
-                "role": "assistant",
-                "content": chunk.choices[0].delta.content or ""
-            })
-        full_message = ''.join(message)
-        user.messages.append(Message("Tubby", full_message))
-        user.update_last_active()
-        time.sleep(5)
-        return render_template('display-chats.html', messages=user.messages)
+        messages = eval(redis_client.hget(session_id, "messages"))
+        messages.append({"sender": "You", "message": data})
+        # Simulate chatbot response
+        messages.append({"sender": "Tubby", "message": "This is a response."})
+        redis_client.hset(session_id, "messages", str(messages))
+        redis_client.hset(session_id, "last_active", str(datetime.now()))
+        return render_template('display-chats.html', messages=messages)
     else:
         return "Session expired. Please refresh the page to start a new chat.", 400
 
 
 @app.route('/end-chat', methods=['POST'])
 def end_chat():
-    with users_lock:
-        user = users.pop(session.get('session_id', None), None)  # Remove user from the dictionary
-    if user:
-        user.messages.append(Message("Tubby", f"Thank you for chatting!"))
-        messages_copy = user.messages.copy()
-        user.cleanup()
-        time.sleep(2)
-        return render_template('end-chat.html', messages=messages_copy)
+    session_id = session.get('session_id')
+    if session_id and redis_client.exists(session_id):
+        messages = eval(redis_client.hget(session_id, "messages"))
+        messages.append({"sender": "Tubby", "message": "Thank you for chatting!"})
+        redis_client.delete(session_id)  # Clean up session
+        return render_template('end-chat.html', messages=messages)
     else:
         return "Session expired. Your chat is already over.", 400
 
-
-@app.route('/chatbot', methods=['GET'])
-def chatbot():
-    session_id = session.get('session_id', None)
-    with users_lock:
-        if not session_id or session_id not in users:
-            user = User(session)
-            users[user.get_session_id()] = user
-            print("New session created:", user.get_session_id())
-        else:
-            user = users[session_id]
-            user.update_last_active()
-        return render_template('chatbot.html', messages=user.messages)
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 
 @app.route('/catalog', methods=['GET'])
