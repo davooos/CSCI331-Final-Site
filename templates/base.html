@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/styles/main_style.css">
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
+    <title>{% block title %}{% endblock %} - Freeflow Spas</title></head>
+    {% block head %}{% endblock %}
+<body>
+<div class = "header">
+    <a href="/"><img src="/static/images/logo.jpg" alt="Logo" class="logo"></a>
+    <div class="menu">
+        <ul>
+            <!-- List of links to the different pages -->
+            <li><a href="/catalog">Hot Tubs</a></li>
+            <li> <a href="/faq">FAQ</a></li>
+        </ul>
+    </div>
+</div>
+{% block content %}
+{% endblock %}
+<div class="chat_icon">
+    <a href="/chatbot"><img src="/static/images/chat.png" alt="chat" class="chat"></a>
+</div>
+</body>
+</html>

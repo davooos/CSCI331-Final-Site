@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Catalog{% endblock %}
+
+{% block content %}
+    <h2>Hot Tub Catalog</h2>
+    <div id="catalog_table">
+        <table>
+            <tr>
+                <th>Photo</th>
+                <th>Model</th>
+                <th>Capacity</th>
+                <th>Price</th>
+                <th>Features</th>
+            </tr>
+            {% for tub in tubs %}
+            <tr>
+                <td></td>
+                <td>{{ tub.name }}</td>
+                <td>{{ tub.capacity }}</td>
+                <td>${{ tub.price }}</td>
+                <td>
+                    {% for feature in tub.features %}
+                        <ul>
+                            <li>{{ feature }}</li>
+                        </ul>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,9 @@
+<button type="submit" id="endChat" value="End" disabled>End Chat</button>
+<ul id="all_messages">
+    {% include 'display-chats.html' %}
+</ul>
+<form id="chatForm" method="POST">
+    <label for="userInput"></label><br>
+    <input type="text" id="userInput" name="userInput" size="50" disabled>
+    <button type="submit" id="submit" value="Submit" disabled>Send</button>
+</form>

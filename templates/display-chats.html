@@ -1,0 +1,7 @@
+{% for message in messages %}
+    {% if message.sender == "You" %}
+        <li class="user-message">{{ message.content }}</li>
+    {% else %}
+        <li class="bot-message">{{ message.content }}</li>
+    {% endif %}
+{% endfor %}
