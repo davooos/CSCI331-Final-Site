@@ -19,9 +19,6 @@ class User:
     def update_last_active(self):
         self.last_active = datetime.now()
 
-    def set_session_id(self):
-        self.session['session_id'] = self.session_id
-
     def cleanup(self):
         del self.chatbot
         self.session.clear()

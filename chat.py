@@ -44,8 +44,6 @@ class Chat:
         ]
 
     def send_message(self, input_text: str):
-        # Add the catalog as an extra system message each call
-
         completion = self.client.chat.completions.create(
             model="meta-llama/llama-4-scout-17b-16e-instruct",
             messages=self.messages + [

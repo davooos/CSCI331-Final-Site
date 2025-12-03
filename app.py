@@ -36,6 +36,22 @@ def home():
     return render_template('index.html')
 
 
+@app.route('/chatbot', methods=['GET'])
+def chatbot():
+    session_id = session.get('session_id', None)
+    with users_lock: # Ensure thread-safe access to users dictionary
+        if not session_id or session_id not in users:
+            session_id = str(len(users) + 1) # Simple session ID generation
+            session['session_id'] = session_id # Store session ID in Flask session
+            user = User(session, session_id) # Create new user session
+            users[user.get_session_id()] = user # Add user to the dictionary
+            print("New session created:", user.get_session_id())
+        else: # Existing session
+            user = users[session_id]
+            user.update_last_active()
+        return render_template('chatbot.html', messages=user.messages)
+
+
 @app.route('/send-chat', methods=['POST']) # Send chat message route
 def send_chat():
     with users_lock: # Ensure thread-safe access to users dictionary
@@ -72,22 +88,6 @@ def end_chat():
         return render_template('end-chat.html', messages=messages_copy)
     else:
         return "Session expired. Your chat is already over.", 400
-
-
-@app.route('/chatbot', methods=['GET'])
-def chatbot():
-    session_id = session.get('session_id', None)
-    with users_lock: # Ensure thread-safe access to users dictionary
-        if not session_id or session_id not in users:
-            session_id = str(len(users) + 1) # Simple session ID generation
-            session['session_id'] = session_id # Store session ID in Flask session
-            user = User(session, session_id) # Create new user session
-            users[user.get_session_id()] = user # Add user to the dictionary
-            print("New session created:", user.get_session_id())
-        else: # Existing session
-            user = users[session_id]
-            user.update_last_active()
-        return render_template('chatbot.html', messages=user.messages)
 
 
 @app.route('/catalog', methods=['GET']) # Catalog route
