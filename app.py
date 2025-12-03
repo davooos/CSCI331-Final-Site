@@ -19,7 +19,10 @@ app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
 app.config['SESSION_KEY_PREFIX'] = 'csci331:'
-app.config['SESSION_REDIS'] = redis.from_url(os.environ.get('REDIS_URL'))
+app.config['SESSION_REDIS'] = redis.from_url(
+    os.environ.get('REDIS_URL'),
+    ssl_cert_reqs=None  # Disables SSL certificate verification
+)
 
 Session(app)
 
