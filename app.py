@@ -1,17 +1,27 @@
 from datetime import datetime
 from flask import Flask, render_template, request, session
+from flask_session import Session
 import time
 from chat import Message
 from user import User
 import os
 from threading import Lock, Thread
 import json
+import redis
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY')
 users = {}
 users_lock = Lock()
 
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY')
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_KEY_PREFIX'] = 'csci331:'
+app.config['SESSION_REDIS'] = redis.from_url(os.environ.get('REDIS_URL'))
+
+Session(app)
 
 def cleanup(): # Background thread to clean up inactive sessions
     while True:
