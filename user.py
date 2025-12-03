@@ -1,4 +1,3 @@
-import uuid
 from chat import Chat
 from chat import Message
 from datetime import datetime

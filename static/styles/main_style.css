@@ -9,7 +9,6 @@ h2 {
 }
 
 .header {
-    /* menu style inline flex */
     display: flex;
     background-color:white;
     justify-content: space-between;
@@ -20,7 +19,6 @@ h2 {
 }
 
 .menu {
-    /* menu style inline flex */
     display: inline-flex;
     gap: 20px;
 }

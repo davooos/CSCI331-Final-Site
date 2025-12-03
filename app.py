@@ -31,16 +31,16 @@ def cleanup(): # Background thread to clean up inactive sessions
         time.sleep(300) # Check every 5 minutes
 
 
-@app.route('/')
+@app.route('/') # Home route
 def home():
     return render_template('index.html')
 
 
-@app.route('/send-chat', methods=['POST'])
+@app.route('/send-chat', methods=['POST']) # Send chat message route
 def send_chat():
-    with users_lock:
+    with users_lock: # Ensure thread-safe access to users dictionary
         user = users.get(session.get('session_id', None), None)
-    if user:
+    if user: # If user session exists
         chatbot = user.get_chatbot()
         data = request.form['userInput']
         user.messages.append(Message("You", data))
@@ -56,18 +56,18 @@ def send_chat():
         user.update_last_active()
         time.sleep(5)
         return render_template('display-chats.html', messages=user.messages)
-    else:
+    else: # Session expired
         return "Session expired. Please refresh the page to start a new chat.", 400
 
 
-@app.route('/end-chat', methods=['POST'])
+@app.route('/end-chat', methods=['POST']) # End chat route
 def end_chat():
     with users_lock:
         user = users.pop(session.get('session_id', None), None)  # Remove user from the dictionary
     if user:
         user.messages.append(Message("Tubby", f"Thank you for chatting!"))
         messages_copy = user.messages.copy()
-        user.cleanup()
+        user.cleanup() # Clean up user resources
         time.sleep(2)
         return render_template('end-chat.html', messages=messages_copy)
     else:
@@ -77,33 +77,33 @@ def end_chat():
 @app.route('/chatbot', methods=['GET'])
 def chatbot():
     session_id = session.get('session_id', None)
-    with users_lock:
+    with users_lock: # Ensure thread-safe access to users dictionary
         if not session_id or session_id not in users:
-            session_id = str(len(users) + 1)
-            session['session_id'] = session_id
-            user = User(session, session_id)
-            users[user.get_session_id()] = user
+            session_id = str(len(users) + 1) # Simple session ID generation
+            session['session_id'] = session_id # Store session ID in Flask session
+            user = User(session, session_id) # Create new user session
+            users[user.get_session_id()] = user # Add user to the dictionary
             print("New session created:", user.get_session_id())
-        else:
+        else: # Existing session
             user = users[session_id]
             user.update_last_active()
         return render_template('chatbot.html', messages=user.messages)
 
 
-@app.route('/catalog', methods=['GET'])
+@app.route('/catalog', methods=['GET']) # Catalog route
 def catalog():
-    json_path = os.path.join(app.static_folder, 'hot_tubs.json')
+    json_path = os.path.join(app.static_folder, 'hot_tubs.json') # Load hot tub data from JSON file
     with open(json_path, 'r') as file:
         hot_tubs = json.load(file)['hot-tubs']
     return render_template('catalog.html', tubs=hot_tubs)
 
 
-@app.route('/faq', methods=['GET'])
+@app.route('/faq', methods=['GET']) # FAQ route
 def faq():
     return render_template('faq.html')
 
 
-@app.route('/contact', methods=['GET'])
+@app.route('/contact', methods=['GET']) # Contact route
 def contact():
     return render_template('contact.html')
 

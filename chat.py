@@ -13,7 +13,7 @@ def load_hot_tubs_data():
 class Chat:
     def __init__(self):
         self.client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-        self.hot_tubs_data = load_hot_tubs_data()  # <-- your JSON here
+        self.hot_tubs_data = load_hot_tubs_data() # Load hot tub catalog
 
         self.messages = [
             {
@@ -29,7 +29,6 @@ class Chat:
                     "Use the provided hot tub catalog when recommending products."
                 ),
             },
-            # Optional: first assistant line (you already had this)
             {
                 "role": "assistant",
                 "content": "Hello! What is your name?",
@@ -65,7 +64,7 @@ class Chat:
         return completion
 
 
-class Message:
+class Message: # Simple message class to hold sender, content, and length
     def __init__(self, sender, content):
         self.sender = sender
         self.content = content
