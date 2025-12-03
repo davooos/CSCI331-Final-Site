@@ -79,7 +79,9 @@ def chatbot():
     session_id = session.get('session_id', None)
     with users_lock:
         if not session_id or session_id not in users:
-            user = User(session)
+            session_id = str(len(users) + 1)
+            session['session_id'] = session_id
+            user = User(session, session_id)
             users[user.get_session_id()] = user
             print("New session created:", user.get_session_id())
         else:

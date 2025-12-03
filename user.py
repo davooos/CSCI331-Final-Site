@@ -4,13 +4,12 @@ from chat import Message
 from datetime import datetime
 
 class User:
-    def __init__(self, session):
+    def __init__(self, session, session_id):
         self.session = session
-        self.session_id = session.get('session_id', str(uuid.uuid4()))
+        self.session_id = session_id
         self.chatbot = Chat()
         self.last_active = datetime.now()
         self.messages = [Message("Tubby", "Hello! What is your name?")]
-        self.set_session_id()
 
     def get_session_id(self):
         return self.session_id
